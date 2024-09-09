@@ -1,2 +1,10 @@
 #!/usr/bin/python3
-    print("Best School")
+# A sample Python script
+
+def main():
+    """Main function that prints a message."""
+    print("Hello, World!")
+
+if __name__ == "__main__":
+    main()
+
