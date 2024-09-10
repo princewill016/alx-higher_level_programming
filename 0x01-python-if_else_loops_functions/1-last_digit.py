@@ -17,4 +17,3 @@ elif last == 0:
     print(f"Last digit of {number} is {last} {zero}")
 else:
     print(f"Last digit of {number} is {last} {less}")
-
