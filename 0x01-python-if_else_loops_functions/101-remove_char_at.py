@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 def remove_char_at(str, n):
     # Check if n is within the valid range
     if n < 0 or n >= len(str):

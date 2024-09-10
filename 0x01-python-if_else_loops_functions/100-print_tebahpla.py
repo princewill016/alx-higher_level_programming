@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 def print_alternating_reverse():
     for i in range(25, -1, -1):
         # Print lowercase and uppercase alternately
