@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 import sys
 
-total = 0
-for args in int(sys.argv[1:]):
-    total += args
-
-print(total)
+def sum_arguments():
+    total = sum(int(arg) for arg in sys.argv[1:])
+    print(total)
