@@ -23,13 +23,19 @@ void print_python_list(PyObject *p)
         PyObject *item = PyList_GetItem(p, i);
         const char *type_name = item->ob_type->tp_name;
         printf("Element %zd: %s\n", i, type_name);
+
+        // If the element is a bytes object, print its info
+        if (PyBytes_Check(item)) {
+            print_python_bytes(item);
+        }
     }
 }
 
 void print_python_bytes(PyObject *p)
 {
     if (!PyBytes_Check(p)) {
-        printf("[ERROR] Invalid Bytes Object\n");
+        printf("[.] bytes object info\n");
+        printf("  [ERROR] Invalid Bytes Object\n");
         return;
     }
 
@@ -43,9 +49,4 @@ void print_python_bytes(PyObject *p)
     printf("  first %zd bytes: ", size < 10 ? size + 1 : 10);
     for (Py_ssize_t i = 0; i < size && i < 10; i++) {
         printf("%02x", (unsigned char)bytes_string[i]);
-        if (i < size - 1 && i < 9) {
-            printf(" ");
-        }
-    }
-    printf("\n");
-}
+        if (i < size - 1 && i <
