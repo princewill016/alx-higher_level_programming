@@ -1,52 +1,51 @@
 #include <Python.h>
+#include <object.h>
+#include <listobject.h>
+#include <bytesobject.h>
+#include <stdio.h>
+#include "lists.h"
 
 void print_python_list(PyObject *p)
 {
-    Py_ssize_t size, alloc, i;
-    PyObject *item;
-
-    printf("[*] Python list info\n");
-    if (!PyList_Check(p))
-    {
-        printf("  [ERROR] Invalid List Object\n");
+    if (!PyList_Check(p)) {
+        printf("[ERROR] Invalid List Object\n");
         return;
     }
 
-    size = ((PyVarObject *)p)->ob_size;
-    alloc = ((PyListObject *)p)->allocated;
+    Py_ssize_t size = PyList_Size(p);
+    Py_ssize_t allocated = ((PyListObject *)p)->allocated;
 
-    printf("[*] Size of the Python List = %ld\n", size);
-    printf("[*] Allocated = %ld\n", alloc);
+    printf("[*] Python list info\n");
+    printf("[*] Size of the Python List = %zd\n", size);
+    printf("[*] Allocated = %zd\n", allocated);
 
-    for (i = 0; i < size; i++)
-    {
-        item = ((PyListObject *)p)->ob_item[i];
-        printf("Element %ld: %s\n", i, item->ob_type->tp_name);
-        if (PyBytes_Check(item))
-            print_python_bytes(item);
+    for (Py_ssize_t i = 0; i < size; i++) {
+        PyObject *item = PyList_GetItem(p, i);
+        const char *type_name = item->ob_type->tp_name;
+        printf("Element %zd: %s\n", i, type_name);
     }
 }
 
 void print_python_bytes(PyObject *p)
 {
-    Py_ssize_t size, i;
-    char *str;
-
-    printf("[.] bytes object info\n");
-    if (!PyBytes_Check(p))
-    {
-        printf("  [ERROR] Invalid Bytes Object\n");
+    if (!PyBytes_Check(p)) {
+        printf("[ERROR] Invalid Bytes Object\n");
         return;
     }
 
-    size = ((PyVarObject *)p)->ob_size;
-    str = ((PyBytesObject *)p)->ob_sval;
+    Py_ssize_t size = PyBytes_Size(p);
+    char *bytes_string = PyBytes_AsString(p);
 
-    printf("  size: %ld\n", size);
-    printf("  trying string: %s\n", str);
+    printf("[.] bytes object info\n");
+    printf("  size: %zd\n", size);
+    printf("  trying string: %s\n", bytes_string);
 
-    printf("  first %ld bytes:", size < 10 ? size + 1 : 10);
-    for (i = 0; i < size && i < 10; i++)
-        printf(" %02x", (unsigned char)str[i]);
+    printf("  first %zd bytes: ", size < 10 ? size + 1 : 10);
+    for (Py_ssize_t i = 0; i < size && i < 10; i++) {
+        printf("%02x", (unsigned char)bytes_string[i]);
+        if (i < size - 1 && i < 9) {
+            printf(" ");
+        }
+    }
     printf("\n");
 }
