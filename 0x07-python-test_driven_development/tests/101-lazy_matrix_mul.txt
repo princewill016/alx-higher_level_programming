@@ -1,0 +1,98 @@
+The ``101-lazy_matrix_mul`` module
+================================
+
+Using ``lazy_matrix_mul``
+-----------------------
+
+Import function:
+    >>> lazy_matrix_mul = __import__('101-lazy_matrix_mul').lazy_matrix_mul
+
+Test normal multiplication:
+    >>> print(lazy_matrix_mul([[1, 2], [3, 4]], [[1, 2], [3, 4]]))
+    [[ 7 10]
+     [15 22]]
+
+Test multiplication with one row:
+    >>> print(lazy_matrix_mul([[1, 2]], [[3, 4], [5, 6]]))
+    [[13 16]]
+
+Test non-list m_a:
+    >>> try:
+    ...     print(lazy_matrix_mul("not a list", [[1, 2]]))
+    ... except TypeError as e:
+    ...     print(e)
+    m_a must be a list
+
+Test non-list m_b:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, 2]], "not a list"))
+    ... except TypeError as e:
+    ...     print(e)
+    m_b must be a list
+
+Test non-list of lists m_a:
+    >>> try:
+    ...     print(lazy_matrix_mul([1, 2], [[3, 4]]))
+    ... except TypeError as e:
+    ...     print(e)
+    m_a must be a list of lists
+
+Test non-list of lists m_b:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, 2]], [3, 4]))
+    ... except TypeError as e:
+    ...     print(e)
+    m_b must be a list of lists
+
+Test empty m_a:
+    >>> try:
+    ...     print(lazy_matrix_mul([], [[1, 2]]))
+    ... except ValueError as e:
+    ...     print(e)
+    m_a can't be empty
+
+Test empty m_b:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, 2]], []))
+    ... except ValueError as e:
+    ...     print(e)
+    m_b can't be empty
+
+Test non-number in m_a:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, "string"]], [[3, 4]]))
+    ... except TypeError as e:
+    ...     print(e)
+    m_a should contain only integers or floats
+
+Test non-number in m_b:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, 2]], [[3, "string"]]))
+    ... except TypeError as e:
+    ...     print(e)
+    m_b should contain only integers or floats
+
+Test uneven rows in m_a:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, 2], [3, 4, 5]], [[1, 2], [3, 4]]))
+    ... except TypeError as e:
+    ...     print(e)
+    each row of m_a must be of the same size
+
+Test uneven rows in m_b:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, 2], [3, 4]], [[1, 2], [3, 4, 5]]))
+    ... except TypeError as e:
+    ...     print(e)
+    each row of m_b must be of the same size
+
+Test matrices that can't be multiplied:
+    >>> try:
+    ...     print(lazy_matrix_mul([[1, 2, 3]], [[1, 2], [3, 4]]))
+    ... except ValueError as e:
+    ...     print(e)
+    m_a and m_b can't be multiplied
+
+Test with float numbers:
+    >>> print(lazy_matrix_mul([[1.5, 2.5]], [[3.0], [4.0]]))
+    [[14.5]]
