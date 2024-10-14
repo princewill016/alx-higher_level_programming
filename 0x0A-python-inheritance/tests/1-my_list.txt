@@ -1,11 +1,10 @@
-# Test file: tests/test_my_list.txt
+#!/usr/bin/python3
 """
-Test cases for the MyList class.
+Test file for the MyList class.
 """
 
->>> MyList = __import__('my_list').MyList
+>>> MyList = __import__('1-my_list').MyList
 
-# Test case 1: Basic functionality
 >>> my_list = MyList()
 >>> my_list.append(1)
 >>> my_list.append(4)
@@ -19,35 +18,22 @@ Test cases for the MyList class.
 >>> print(my_list)
 [1, 4, 2, 3, 5]
 
-# Test case 2: Empty list
->>> empty_list = MyList()
->>> empty_list.print_sorted()
+>>> my_list = MyList([3, 2, 1])
+>>> print(my_list)
+[3, 2, 1]
+>>> my_list.print_sorted()
+[1, 2, 3]
+>>> print(my_list)
+[3, 2, 1]
+
+>>> my_list = MyList()
+>>> my_list.print_sorted()
 []
 
-# Test case 3: List with negative numbers
->>> neg_list = MyList()
->>> neg_list.append(-1)
->>> neg_list.append(-4)
->>> neg_list.append(-2)
->>> neg_list.append(-3)
->>> neg_list.append(-5)
->>> neg_list.print_sorted()
-[-5, -4, -3, -2, -1]
+>>> my_list = MyList([-4, -2, -7, -1])
+>>> my_list.print_sorted()
+[-7, -4, -2, -1]
 
-# Test case 4: List with duplicate numbers
->>> dup_list = MyList()
->>> dup_list.append(1)
->>> dup_list.append(1)
->>> dup_list.append(2)
->>> dup_list.append(2)
->>> dup_list.append(1)
->>> dup_list.print_sorted()
-[1, 1, 1, 2, 2]
-
-# Test case 5: Inherits from list
->>> issubclass(MyList, list)
-True
-
-# Test case 6: print_sorted method exists
->>> hasattr(MyList, 'print_sorted')
-True
+>>> my_list = MyList([1, 1, 1, 1])
+>>> my_list.print_sorted()
+[1, 1, 1, 1]
