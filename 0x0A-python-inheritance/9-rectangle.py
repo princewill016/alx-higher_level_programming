@@ -1,23 +1,30 @@
 #!/usr/bin/python3
 """
-This module contains the Rectangle class, which inherits from BaseGeometry.
+This module contains a Rectangle class that inherits from BaseGeometry.
 """
-
 BaseGeometry = __import__('7-base_geometry').BaseGeometry
 
 
 class Rectangle(BaseGeometry):
     """
     A class representing a rectangle, inheriting from BaseGeometry.
+
+    This class initializes a rectangle with width and height,
+    ensures they are positive integers, and provides methods
+    for calculating area and string representation.
     """
 
     def __init__(self, width, height):
         """
-        Initializes a Rectangle instance.
+        Initialize a Rectangle instance.
 
         Args:
             width (int): The width of the rectangle.
             height (int): The height of the rectangle.
+
+        Raises:
+            TypeError: If width or height is not an integer.
+            ValueError: If width or height is less than or equal to 0.
         """
         self.integer_validator("width", width)
         self.integer_validator("height", height)
@@ -26,7 +33,7 @@ class Rectangle(BaseGeometry):
 
     def area(self):
         """
-        Calculates the area of the rectangle.
+        Calculate the area of the rectangle.
 
         Returns:
             int: The area of the rectangle.
@@ -35,9 +42,9 @@ class Rectangle(BaseGeometry):
 
     def __str__(self):
         """
-        Returns a string representation of the rectangle.
+        Return a string representation of the rectangle.
 
         Returns:
-            str: A description of the rectangle in the format [Rectangle] <width>/<height>
+            str: A string in the format [Rectangle] <width>/<height>
         """
-        return "[Rectangle] {}/{}".format(self.__width, self.__height)
+        return f"[Rectangle] {self.__width}/{self.__height}"
