@@ -3,16 +3,13 @@
 This module defines a class Student.
 """
 
-
 class Student:
     """
     Defines a student with first name, last name, and age.
     """
-
     def __init__(self, first_name, last_name, age):
         """
         Initializes a new Student instance.
-
         Args:
             first_name (str): The first name of the student.
             last_name (str): The last name of the student.
@@ -25,13 +22,10 @@ class Student:
     def to_json(self, attrs=None):
         """
         Retrieves a dictionary representation of the Student instance.
-
         If attrs is a list of strings, only the attribute names in this
         list will be included in the dictionary.
-
         Args:
             attrs (list): List of strings representing attribute names.
-
         Returns:
             dict: Dictionary representation of the Student instance.
         """
@@ -41,12 +35,9 @@ class Student:
 
     def reload_from_json(self, json):
         """
-        Replaces all attributes of the Student instance with values
-        from the provided dictionary.
-
+        Replaces all attributes of the Student instance.
         Args:
-            json (dict): Dictionary where keys are attribute names and
-            values are the corresponding values to set.
+            json (dict): A dictionary where keys are attribute names and values are attribute values.
         """
         for key, value in json.items():
             setattr(self, key, value)
