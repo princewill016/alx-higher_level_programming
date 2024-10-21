@@ -18,7 +18,6 @@ class Rectangle(Base):
         y (int): Y-coordinate of the rectangle's position
         id (int): Identifier of the rectangle
     """
-
     def __init__(self, width, height, x=0, y=0, id=None):
         """
         Initialize a new Rectangle instance.
@@ -141,20 +140,19 @@ class Rectangle(Base):
         """
         return self.width * self.height
 
-    def display(self):
+    def update(self, *args):
         """
-        Display the Rectangle instance using '#' characters.
-        Prints the rectangle to stdout.
-        """
-        for _ in range(self.height):
-            print('#' * self.width)
-
-    def __str__(self):
-        """
-        Return string representation of Rectangle instance.
+        Update the Rectangle attributes with no-keyword arguments.
         
-        Returns:
-            str: String in format [Rectangle] (<id>) <x>/<y> - <width>/<height>
+        Args:
+            *args: Variable length argument list.
+                1st argument represents id attribute
+                2nd argument represents width attribute
+                3rd argument represents height attribute
+                4th argument represents x attribute
+                5th argument represents y attribute
         """
-        return "[Rectangle] ({}) {}/{} - {}/{}".format(
-            self.id, self.x, self.y, self.width, self.height)
+        attributes = ['id', 'width', 'height', 'x', 'y']
+        for i in range(len(args)):
+            if i < len(attributes):
+                setattr(self, attributes[i], args[i])
