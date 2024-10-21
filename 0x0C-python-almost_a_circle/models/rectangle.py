@@ -35,7 +35,6 @@ class Rectangle(Base):
             ValueError: If width or height <= 0, or if x or y < 0
         """
         super().__init__(id)
-        # Validate and set each attribute using the setters
         self.width = width
         self.height = height
         self.x = x
@@ -132,3 +131,12 @@ class Rectangle(Base):
         if value < 0:
             raise ValueError("y must be >= 0")
         self.__y = value
+
+    def area(self):
+        """
+        Calculate the area of the Rectangle instance.
+
+        Returns:
+            int: The area value of the Rectangle instance
+        """
+        return self.width * self.height
