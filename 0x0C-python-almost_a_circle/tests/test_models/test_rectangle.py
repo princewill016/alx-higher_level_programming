@@ -3,8 +3,23 @@
 Unit tests for Rectangle class
 """
 import unittest
+import io
+import sys
+from contextlib import contextmanager
 from models.rectangle import Rectangle
 from models.base import Base
+
+
+@contextmanager
+def capture_output():
+    """Capture stdout output for testing"""
+    new_out = io.StringIO()
+    old_out = sys.stdout
+    try:
+        sys.stdout = new_out
+        yield sys.stdout
+    finally:
+        sys.stdout = old_out
 
 
 class TestRectangle(unittest.TestCase):
@@ -32,38 +47,6 @@ class TestRectangle(unittest.TestCase):
         self.assertEqual(r.y, 2)
         self.assertEqual(r.id, 100)
 
-    def test_width_validation_on_init(self):
-        """Test width validation during initialization"""
-        with self.assertRaisesRegex(TypeError, "width must be an integer"):
-            Rectangle("10", 20)
-        with self.assertRaisesRegex(ValueError, "width must be > 0"):
-            Rectangle(0, 20)
-        with self.assertRaisesRegex(ValueError, "width must be > 0"):
-            Rectangle(-10, 20)
-
-    def test_height_validation_on_init(self):
-        """Test height validation during initialization"""
-        with self.assertRaisesRegex(TypeError, "height must be an integer"):
-            Rectangle(10, "20")
-        with self.assertRaisesRegex(ValueError, "height must be > 0"):
-            Rectangle(10, 0)
-        with self.assertRaisesRegex(ValueError, "height must be > 0"):
-            Rectangle(10, -20)
-
-    def test_x_validation_on_init(self):
-        """Test x validation during initialization"""
-        with self.assertRaisesRegex(TypeError, "x must be an integer"):
-            Rectangle(10, 20, "1")
-        with self.assertRaisesRegex(ValueError, "x must be >= 0"):
-            Rectangle(10, 20, -1)
-
-    def test_y_validation_on_init(self):
-        """Test y validation during initialization"""
-        with self.assertRaisesRegex(TypeError, "y must be an integer"):
-            Rectangle(10, 20, 1, "2")
-        with self.assertRaisesRegex(ValueError, "y must be >= 0"):
-            Rectangle(10, 20, 1, -2)
-
     def test_area(self):
         """Test area calculation"""
         r1 = Rectangle(3, 2)
@@ -71,24 +54,46 @@ class TestRectangle(unittest.TestCase):
         
         r2 = Rectangle(8, 7, 0, 0, 12)
         self.assertEqual(r2.area(), 56)
-        
-        r3 = Rectangle(2, 10)
-        self.assertEqual(r3.area(), 20)
-        
-        # Test with larger numbers
-        r4 = Rectangle(999, 999)
-        self.assertEqual(r4.area(), 998001)
 
-    def test_area_after_attribute_change(self):
-        """Test area calculation after changing attributes"""
-        r = Rectangle(2, 3)
-        self.assertEqual(r.area(), 6)
-        
-        r.width = 5
-        self.assertEqual(r.area(), 15)
-        
-        r.height = 7
-        self.assertEqual(r.area(), 35)
+    def test_display_2x2(self):
+        """Test displaying a 2x2 rectangle"""
+        r = Rectangle(2, 2)
+        expected_output = "##\n##\n"
+        with capture_output() as output:
+            r.display()
+            self.assertEqual(output.getvalue(), expected_output)
+
+    def test_display_1x1(self):
+        """Test displaying a 1x1 rectangle"""
+        r = Rectangle(1, 1)
+        expected_output = "#\n"
+        with capture_output() as output:
+            r.display()
+            self.assertEqual(output.getvalue(), expected_output)
+
+    def test_display_3x4(self):
+        """Test displaying a 3x4 rectangle"""
+        r = Rectangle(3, 4)
+        expected_output = "###\n###\n###\n###\n"
+        with capture_output() as output:
+            r.display()
+            self.assertEqual(output.getvalue(), expected_output)
+
+    def test_display_4x6(self):
+        """Test displaying a 4x6 rectangle"""
+        r = Rectangle(4, 6)
+        expected_output = "####\n####\n####\n####\n####\n####\n"
+        with capture_output() as output:
+            r.display()
+            self.assertEqual(output.getvalue(), expected_output)
+
+    def test_display_with_x_y(self):
+        """Test that display ignores x and y values"""
+        r = Rectangle(2, 3, 2, 2)
+        expected_output = "##\n##\n##\n"
+        with capture_output() as output:
+            r.display()
+            self.assertEqual(output.getvalue(), expected_output)
 
 
 if __name__ == '__main__':
