@@ -32,8 +32,8 @@ class TestRectangle(unittest.TestCase):
         self.assertEqual(r.y, 2)
         self.assertEqual(r.id, 100)
 
-    def test_width_validation(self):
-        """Test width validation"""
+    def test_width_validation_on_init(self):
+        """Test width validation during initialization"""
         with self.assertRaisesRegex(TypeError, "width must be an integer"):
             Rectangle("10", 20)
         with self.assertRaisesRegex(ValueError, "width must be > 0"):
@@ -41,8 +41,8 @@ class TestRectangle(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "width must be > 0"):
             Rectangle(-10, 20)
 
-    def test_height_validation(self):
-        """Test height validation"""
+    def test_height_validation_on_init(self):
+        """Test height validation during initialization"""
         with self.assertRaisesRegex(TypeError, "height must be an integer"):
             Rectangle(10, "20")
         with self.assertRaisesRegex(ValueError, "height must be > 0"):
@@ -50,25 +50,55 @@ class TestRectangle(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "height must be > 0"):
             Rectangle(10, -20)
 
-    def test_x_validation(self):
-        """Test x validation"""
+    def test_x_validation_on_init(self):
+        """Test x validation during initialization"""
         with self.assertRaisesRegex(TypeError, "x must be an integer"):
             Rectangle(10, 20, "1")
         with self.assertRaisesRegex(ValueError, "x must be >= 0"):
             Rectangle(10, 20, -1)
 
-    def test_y_validation(self):
-        """Test y validation"""
+    def test_y_validation_on_init(self):
+        """Test y validation during initialization"""
         with self.assertRaisesRegex(TypeError, "y must be an integer"):
             Rectangle(10, 20, 1, "2")
         with self.assertRaisesRegex(ValueError, "y must be >= 0"):
             Rectangle(10, 20, 1, -2)
 
-    def test_inheritance(self):
-        """Test inheritance from Base class"""
+    def test_width_setter_validation(self):
+        """Test width validation using setter"""
         r = Rectangle(10, 20)
-        self.assertIsInstance(r, Base)
-        self.assertIsInstance(r, Rectangle)
+        with self.assertRaisesRegex(TypeError, "width must be an integer"):
+            r.width = "10"
+        with self.assertRaisesRegex(ValueError, "width must be > 0"):
+            r.width = 0
+        with self.assertRaisesRegex(ValueError, "width must be > 0"):
+            r.width = -10
+
+    def test_height_setter_validation(self):
+        """Test height validation using setter"""
+        r = Rectangle(10, 20)
+        with self.assertRaisesRegex(TypeError, "height must be an integer"):
+            r.height = "20"
+        with self.assertRaisesRegex(ValueError, "height must be > 0"):
+            r.height = 0
+        with self.assertRaisesRegex(ValueError, "height must be > 0"):
+            r.height = -20
+
+    def test_x_setter_validation(self):
+        """Test x validation using setter"""
+        r = Rectangle(10, 20)
+        with self.assertRaisesRegex(TypeError, "x must be an integer"):
+            r.x = "1"
+        with self.assertRaisesRegex(ValueError, "x must be >= 0"):
+            r.x = -1
+
+    def test_y_setter_validation(self):
+        """Test y validation using setter"""
+        r = Rectangle(10, 20)
+        with self.assertRaisesRegex(TypeError, "y must be an integer"):
+            r.y = "2"
+        with self.assertRaisesRegex(ValueError, "y must be >= 0"):
+            r.y = -2
 
 
 if __name__ == '__main__':

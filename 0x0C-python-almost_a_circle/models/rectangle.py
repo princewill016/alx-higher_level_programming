@@ -29,8 +29,13 @@ class Rectangle(Base):
             x (int, optional): X-coordinate of the rectangle. Defaults to 0.
             y (int, optional): Y-coordinate of the rectangle. Defaults to 0.
             id (int, optional): Identifier of the rectangle. Defaults to None.
+
+        Raises:
+            TypeError: If width, height, x, or y is not an integer
+            ValueError: If width or height <= 0, or if x or y < 0
         """
         super().__init__(id)
+        # Validate and set each attribute using the setters
         self.width = width
         self.height = height
         self.x = x
@@ -48,6 +53,10 @@ class Rectangle(Base):
 
         Args:
             value (int): Width value to set
+
+        Raises:
+            TypeError: If value is not an integer
+            ValueError: If value is <= 0
         """
         if not isinstance(value, int):
             raise TypeError("width must be an integer")
@@ -67,6 +76,10 @@ class Rectangle(Base):
 
         Args:
             value (int): Height value to set
+
+        Raises:
+            TypeError: If value is not an integer
+            ValueError: If value is <= 0
         """
         if not isinstance(value, int):
             raise TypeError("height must be an integer")
@@ -86,6 +99,10 @@ class Rectangle(Base):
 
         Args:
             value (int): X-coordinate value to set
+
+        Raises:
+            TypeError: If value is not an integer
+            ValueError: If value is < 0
         """
         if not isinstance(value, int):
             raise TypeError("x must be an integer")
@@ -105,6 +122,10 @@ class Rectangle(Base):
 
         Args:
             value (int): Y-coordinate value to set
+
+        Raises:
+            TypeError: If value is not an integer
+            ValueError: If value is < 0
         """
         if not isinstance(value, int):
             raise TypeError("y must be an integer")
