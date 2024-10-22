@@ -5,6 +5,7 @@ It manages the id attribute to avoid code duplication and maintain consistency a
 """
 import json
 import os
+import csv
 
 class Base:
     """
@@ -97,11 +98,6 @@ class Base:
         
         Returns:
             instance: An instance with all attributes already set
-            
-        Notes:
-            - Creates a "dummy" instance with mandatory attributes
-            - Updates the dummy instance with real values using update method
-            - Uses **dictionary as **kwargs for the update method
         """
         if cls.__name__ == "Rectangle":
             dummy = cls(1, 1)  # Create dummy Rectangle with width=1, height=1
@@ -119,26 +115,88 @@ class Base:
         Create a list of instances from a JSON file.
         
         Returns:
-            list: A list of instances. The type of these instances depends on cls.
-                Returns an empty list if the file doesn't exist.
-                Otherwise returns a list of instances.
-                
-        Notes:
-            - The filename will be <Class name>.json (e.g., Rectangle.json)
-            - Uses from_json_string and create methods
+            list: A list of instances.
         """
         filename = cls.__name__ + ".json"
         
-        # Return empty list if file doesn't exist
         if not os.path.exists(filename):
             return []
         
-        # Read and parse the JSON file
         with open(filename, 'r', encoding='utf-8') as f:
             json_string = f.read()
         
-        # Convert JSON string to list of dictionaries
         list_dicts = cls.from_json_string(json_string)
-        
-        # Create instances from dictionaries
         return [cls.create(**d) for d in list_dicts]
+
+    @classmethod
+    def save_to_file_csv(cls, list_objs):
+        """
+        Serialize instances to a CSV file.
+        
+        Args:
+            list_objs (list): A list of instances who inherits from Base
+            
+        Notes:
+            - The filename will be <Class name>.csv
+            - Format for Rectangle: <id>,<width>,<height>,<x>,<y>
+            - Format for Square: <id>,<size>,<x>,<y>
+        """
+        filename = cls.__name__ + ".csv"
+        
+        if list_objs is None:
+            list_objs = []
+
+        with open(filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            for obj in list_objs:
+                if cls.__name__ == "Rectangle":
+                    writer.writerow([obj.id, obj.width, obj.height, obj.x, obj.y])
+                elif cls.__name__ == "Square":
+                    writer.writerow([obj.id, obj.size, obj.x, obj.y])
+
+    @classmethod
+    def load_from_file_csv(cls):
+        """
+        Deserialize instances from a CSV file.
+        
+        Returns:
+            list: A list of instances
+            
+        Notes:
+            - The filename will be <Class name>.csv
+            - Returns an empty list if the file doesn't exist
+            - Format for Rectangle: <id>,<width>,<height>,<x>,<y>
+            - Format for Square: <id>,<size>,<x>,<y>
+        """
+        filename = cls.__name__ + ".csv"
+        
+        if not os.path.exists(filename):
+            return []
+
+        instances = []
+        with open(filename, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                # Convert all values to integers
+                row = [int(x) for x in row]
+                
+                if cls.__name__ == "Rectangle":
+                    dictionary = {
+                        'id': row[0],
+                        'width': row[1],
+                        'height': row[2],
+                        'x': row[3],
+                        'y': row[4]
+                    }
+                elif cls.__name__ == "Square":
+                    dictionary = {
+                        'id': row[0],
+                        'size': row[1],
+                        'x': row[2],
+                        'y': row[3]
+                    }
+                
+                instance = cls.create(**dictionary)
+                instances.append(instance)
+                
+        return instances
