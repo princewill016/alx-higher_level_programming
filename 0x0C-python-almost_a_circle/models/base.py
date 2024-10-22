@@ -5,7 +5,6 @@ It manages the id attribute to avoid code duplication and maintain consistency a
 """
 import json
 
-
 class Base:
     """
     Base class for all other classes in the project.
@@ -86,3 +85,29 @@ class Base:
         
         with open(filename, 'w', encoding='utf-8') as f:
             f.write(cls.to_json_string(list_dicts))
+
+    @classmethod
+    def create(cls, **dictionary):
+        """
+        Create an instance with all attributes already set.
+        
+        Args:
+            **dictionary: Double pointer to a dictionary of attributes
+        
+        Returns:
+            instance: An instance with all attributes already set
+            
+        Notes:
+            - Creates a "dummy" instance with mandatory attributes
+            - Updates the dummy instance with real values using update method
+            - Uses **dictionary as **kwargs for the update method
+        """
+        if cls.__name__ == "Rectangle":
+            dummy = cls(1, 1)  # Create dummy Rectangle with width=1, height=1
+        elif cls.__name__ == "Square":
+            dummy = cls(1)     # Create dummy Square with size=1
+        else:
+            return None
+        
+        dummy.update(**dictionary)  # Update dummy instance with real values
+        return dummy
