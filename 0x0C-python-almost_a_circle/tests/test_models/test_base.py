@@ -1,73 +1,81 @@
 #!/usr/bin/python3
 """
-This module contains the Base class which serves as the foundation for all other classes in the project.
-It manages the id attribute to avoid code duplication and maintain consistency across derived classes.
+Unit tests for the Base class.
+Tests the functionality of the Base class including from_json_string method.
 """
-import json
+import unittest
+from models.base import Base
+from models.rectangle import Rectangle
+from models.square import Square
 
 
-class Base:
+class TestBaseFromJsonString(unittest.TestCase):
     """
-    Base class for all other classes in the project.
-    
-    Attributes:
-        __nb_objects (int): Private class attribute to keep track of number of objects
-        id (int): Public instance attribute for identification
+    Test cases for the Base class from_json_string method.
     """
-    __nb_objects = 0
 
-    def __init__(self, id=None):
-        """
-        Initialize a new Base instance.
-        
-        Args:
-            id (int, optional): Identifier for the instance. Defaults to None.
-                              If None, __nb_objects is incremented and used as id.
-        """
-        if id is not None:
-            self.id = id
-        else:
-            Base.__nb_objects += 1
-            self.id = Base.__nb_objects
+    def test_from_json_string_none(self):
+        """Test conversion of None to list"""
+        list_output = Base.from_json_string(None)
+        self.assertEqual(list_output, [])
 
-    @staticmethod
-    def to_json_string(list_dictionaries):
-        """
-        Return the JSON string representation of list_dictionaries.
-        
-        Args:
-            list_dictionaries (list): A list of dictionaries to convert to JSON string
-        
-        Returns:
-            str: The JSON string representation of list_dictionaries.
-                Returns "[]" if list_dictionaries is None or empty.
-                Otherwise returns the JSON string representation.
-        """
-        if list_dictionaries is None or not list_dictionaries:
-            return "[]"
-        return json.dumps(list_dictionaries)
+    def test_from_json_string_empty_string(self):
+        """Test conversion of empty string to list"""
+        list_output = Base.from_json_string("")
+        self.assertEqual(list_output, [])
 
-    @classmethod
-    def save_to_file(cls, list_objs):
-        """
-        Write the JSON string representation of list_objs to a file.
-        
-        Args:
-            list_objs (list): A list of instances who inherits from Base
-        
-        Notes:
-            - The filename will be <Class name>.json (e.g., Rectangle.json)
-            - If list_objs is None, an empty list will be saved
-            - The file will be overwritten if it already exists
-        """
-        filename = cls.__name__ + ".json"
-        
-        # Convert list_objs to list of dictionaries
-        if list_objs is None:
-            list_objs = []
-        
-        list_dicts = [obj.to_dictionary() for obj in list_objs]
-        
-        # Write to file using to_json_string
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(cls.to_json_string(list_dicts))
+    def test_from_json_string_empty_list(self):
+        """Test conversion of JSON string representing empty list"""
+        list_output = Base.from_json_string("[]")
+        self.assertEqual(list_output, [])
+
+    def test_from_json_string_single_dict(self):
+        """Test conversion of JSON string with single dictionary"""
+        json_input = '[{"id": 1, "width": 10, "height": 7, "x": 2, "y": 8}]'
+        list_output = Base.from_json_string(json_input)
+        expected = [{'id': 1, 'width': 10, 'height': 7, 'x': 2, 'y': 8}]
+        self.assertEqual(list_output, expected)
+
+    def test_from_json_string_multiple_dicts(self):
+        """Test conversion of JSON string with multiple dictionaries"""
+        json_input = '[{"id": 1, "width": 10, "height": 7}, {"id": 2, "width": 2, "height": 4}]'
+        list_output = Base.from_json_string(json_input)
+        expected = [
+            {'id': 1, 'width': 10, 'height': 7},
+            {'id': 2, 'width': 2, 'height': 4}
+        ]
+        self.assertEqual(list_output, expected)
+
+    def test_from_json_string_nested_dict(self):
+        """Test conversion of JSON string with nested dictionary"""
+        json_input = '[{"id": 1, "nested": {"key": "value"}}]'
+        list_output = Base.from_json_string(json_input)
+        expected = [{'id': 1, 'nested': {'key': 'value'}}]
+        self.assertEqual(list_output, expected)
+
+    def test_from_json_string_types(self):
+        """Test that method returns proper types"""
+        json_input = '[{"id": 1, "width": 10, "height": 7}]'
+        list_output = Base.from_json_string(json_input)
+        self.assertTrue(isinstance(list_output, list))
+        self.assertTrue(isinstance(list_output[0], dict))
+
+    def test_from_json_string_invalid_json(self):
+        """Test handling of invalid JSON string"""
+        json_input = '[{invalid json}]'
+        with self.assertRaises(json.JSONDecodeError):
+            Base.from_json_string(json_input)
+
+    def test_from_json_string_round_trip(self):
+        """Test conversion from list to JSON string and back"""
+        list_input = [
+            {'id': 89, 'width': 10, 'height': 4},
+            {'id': 7, 'width': 1, 'height': 7}
+        ]
+        json_string = Base.to_json_string(list_input)
+        list_output = Base.from_json_string(json_string)
+        self.assertEqual(list_input, list_output)
+
+
+if __name__ == '__main__':
+    unittest.main()
