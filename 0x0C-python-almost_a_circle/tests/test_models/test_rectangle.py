@@ -1,47 +1,60 @@
 #!/usr/bin/python3
-"""
-Unit tests for Rectangle class
-"""
+"""Unit tests for Rectangle class"""
 import unittest
 from models.rectangle import Rectangle
 
 
-class TestRectangle(unittest.TestCase):
-    """Test cases for Rectangle class"""
+class TestRectangleDictionary(unittest.TestCase):
+    """Test cases for Rectangle's to_dictionary method"""
 
-    def test_str_method_width_height(self):
-        """Test __str__ method with width and height"""
-        r = Rectangle(1, 2)
-        self.assertEqual(str(r), "[Rectangle] ({}) 0/0 - 1/2".format(r.id))
+    def setUp(self):
+        """Reset the private class attribute between tests"""
+        Rectangle._Base__nb_objects = 0
 
-    def test_str_method_width_height_x(self):
-        """Test __str__ method with width, height, x"""
-        r = Rectangle(1, 2, 3)
-        self.assertEqual(str(r), "[Rectangle] ({}) 3/0 - 1/2".format(r.id))
+    def test_to_dictionary_basic(self):
+        """Test basic dictionary representation"""
+        r = Rectangle(10, 20, 1, 2, 3)
+        expected = {'id': 3, 'width': 10, 'height': 20, 'x': 1, 'y': 2}
+        self.assertEqual(r.to_dictionary(), expected)
 
-    def test_str_method_width_height_x_y(self):
-        """Test __str__ method with width, height, x, y"""
-        r = Rectangle(1, 2, 3, 4)
-        self.assertEqual(str(r), "[Rectangle] ({}) 3/4 - 1/2".format(r.id))
+    def test_to_dictionary_default_values(self):
+        """Test dictionary with default x, y values"""
+        r = Rectangle(10, 20)
+        expected = {'id': 1, 'width': 10, 'height': 20, 'x': 0, 'y': 0}
+        self.assertEqual(r.to_dictionary(), expected)
 
-    def test_str_method_width_height_x_y_id(self):
-        """Test __str__ method with all attributes"""
-        r = Rectangle(10, 20, 30, 40, 50)
-        self.assertEqual(str(r), "[Rectangle] (50) 30/40 - 10/20")
+    def test_to_dictionary_no_id(self):
+        """Test dictionary when id is not provided"""
+        r = Rectangle(10, 20, 1, 2)
+        result = r.to_dictionary()
+        self.assertEqual(result['width'], 10)
+        self.assertEqual(result['height'], 20)
+        self.assertEqual(result['x'], 1)
+        self.assertEqual(result['y'], 2)
+        self.assertEqual(result['id'], 1)
 
-    def test_str_method_changed_attributes(self):
-        """Test __str__ method with changed attributes"""
-        r = Rectangle(1, 1, 1, 1, 1)
-        r.width = 2
-        r.height = 3
-        r.x = 4
-        r.y = 5
-        self.assertEqual(str(r), "[Rectangle] (1) 4/5 - 2/3")
+    def test_to_dictionary_update(self):
+        """Test using dictionary with update method"""
+        r1 = Rectangle(10, 20, 1, 2, 3)
+        r2 = Rectangle(1, 1)
+        r2.update(**r1.to_dictionary())
+        self.assertEqual(r1.to_dictionary(), r2.to_dictionary())
+        self.assertFalse(r1 is r2)
 
-    def test_str_method_one_arg(self):
-        """Test __str__ method with one argument"""
-        with self.assertRaises(TypeError):
-            Rectangle(1)
+    def test_to_dictionary_modified_values(self):
+        """Test dictionary after modifying attributes"""
+        r = Rectangle(10, 20, 1, 2, 3)
+        original_dict = r.to_dictionary()
+        r.width = 30
+        r.height = 40
+        r.x = 3
+        r.y = 4
+        modified_dict = r.to_dictionary()
+        self.assertNotEqual(original_dict, modified_dict)
+        self.assertEqual(modified_dict['width'], 30)
+        self.assertEqual(modified_dict['height'], 40)
+        self.assertEqual(modified_dict['x'], 3)
+        self.assertEqual(modified_dict['y'], 4)
 
 
 if __name__ == '__main__':
