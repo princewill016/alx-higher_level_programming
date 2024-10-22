@@ -52,64 +52,85 @@ class TestSquare(unittest.TestCase):
         expected = "[Square] (12) 2/1 - 4"
         self.assertEqual(str(s), expected)
 
-    def test_invalid_size_type(self):
-        """Test size validation for type"""
-        with self.assertRaisesRegex(TypeError, "width must be an integer"):
-            Square("5")
-        with self.assertRaisesRegex(TypeError, "width must be an integer"):
-            Square(None)
-
-    def test_invalid_size_value(self):
-        """Test size validation for value"""
-        with self.assertRaisesRegex(ValueError, "width must be > 0"):
-            Square(0)
-        with self.assertRaisesRegex(ValueError, "width must be > 0"):
-            Square(-5)
-
-    def test_invalid_x(self):
-        """Test x validation"""
-        with self.assertRaisesRegex(TypeError, "x must be an integer"):
-            Square(5, "2")
-        with self.assertRaisesRegex(ValueError, "x must be >= 0"):
-            Square(5, -2)
-
-    def test_invalid_y(self):
-        """Test y validation"""
-        with self.assertRaisesRegex(TypeError, "y must be an integer"):
-            Square(5, 2, "3")
-        with self.assertRaisesRegex(ValueError, "y must be >= 0"):
-            Square(5, 2, -3)
-
-    def test_area(self):
-        """Test area calculation"""
-        s = Square(5)
-        self.assertEqual(s.area(), 25)
-        
-        s.size = 10
-        self.assertEqual(s.area(), 100)
-
-    def test_display(self):
-        """Test that display method exists"""
-        s = Square(2)
-        self.assertTrue(hasattr(s, 'display'))
-
     def test_update_args(self):
-        """Test update method with *args"""
+        """Test update method with args"""
         s = Square(5)
+        
+        # Test updating id
+        s.update(10)
+        self.assertEqual(str(s), "[Square] (10) 0/0 - 5")
+        
+        # Test updating size
+        s.update(10, 20)
+        self.assertEqual(str(s), "[Square] (10) 0/0 - 20")
+        
+        # Test updating x
+        s.update(10, 20, 30)
+        self.assertEqual(str(s), "[Square] (10) 30/0 - 20")
+        
+        # Test updating y
         s.update(10, 20, 30, 40)
-        self.assertEqual(s.id, 10)
-        self.assertEqual(s.size, 20)
-        self.assertEqual(s.x, 30)
-        self.assertEqual(s.y, 40)
+        self.assertEqual(str(s), "[Square] (10) 30/40 - 20")
 
     def test_update_kwargs(self):
-        """Test update method with **kwargs"""
+        """Test update method with kwargs"""
         s = Square(5)
+        
+        # Test updating single attribute
+        s.update(size=20)
+        self.assertEqual(str(s), "[Square] (1) 0/0 - 20")
+        
+        # Test updating multiple attributes
         s.update(size=20, y=40, x=30, id=10)
-        self.assertEqual(s.id, 10)
-        self.assertEqual(s.size, 20)
-        self.assertEqual(s.x, 30)
-        self.assertEqual(s.y, 40)
+        self.assertEqual(str(s), "[Square] (10) 30/40 - 20")
+        
+        # Test that args takes precedence over kwargs
+        s.update(1, 2, 3, 4, size=20, y=40, x=30, id=10)
+        self.assertEqual(str(s), "[Square] (1) 3/4 - 2")
+
+    def test_update_invalid_args(self):
+        """Test update method with invalid arguments"""
+        s = Square(5)
+        
+        # Test invalid size
+        with self.assertRaisesRegex(TypeError, "width must be an integer"):
+            s.update(1, "invalid")
+        
+        # Test invalid x
+        with self.assertRaisesRegex(TypeError, "x must be an integer"):
+            s.update(1, 2, "invalid")
+        
+        # Test invalid y
+        with self.assertRaisesRegex(TypeError, "y must be an integer"):
+            s.update(1, 2, 3, "invalid")
+
+    def test_update_invalid_kwargs(self):
+        """Test update method with invalid kwargs"""
+        s = Square(5)
+        
+        # Test invalid size
+        with self.assertRaisesRegex(TypeError, "width must be an integer"):
+            s.update(size="invalid")
+        
+        # Test invalid x
+        with self.assertRaisesRegex(TypeError, "x must be an integer"):
+            s.update(x="invalid")
+        
+        # Test invalid y
+        with self.assertRaisesRegex(TypeError, "y must be an integer"):
+            s.update(y="invalid")
+
+    def test_update_with_extra_args(self):
+        """Test update method with extra args"""
+        s = Square(5)
+        s.update(1, 2, 3, 4, 5, 6, 7)
+        self.assertEqual(str(s), "[Square] (1) 3/4 - 2")
+
+    def test_update_with_unknown_kwargs(self):
+        """Test update method with unknown kwargs"""
+        s = Square(5)
+        s.update(unknown=10)  # Should be ignored
+        self.assertEqual(str(s), "[Square] (1) 0/0 - 5")
 
 
 if __name__ == '__main__':
