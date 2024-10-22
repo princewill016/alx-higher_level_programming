@@ -3,6 +3,7 @@
 This module contains the Base class which serves as the foundation for all other classes in the project.
 It manages the id attribute to avoid code duplication and maintain consistency across derived classes.
 """
+import json
 
 
 class Base:
@@ -28,3 +29,20 @@ class Base:
         else:
             Base.__nb_objects += 1
             self.id = Base.__nb_objects
+
+    @staticmethod
+    def to_json_string(list_dictionaries):
+        """
+        Return the JSON string representation of list_dictionaries.
+        
+        Args:
+            list_dictionaries (list): A list of dictionaries to convert to JSON string
+        
+        Returns:
+            str: The JSON string representation of list_dictionaries.
+                Returns "[]" if list_dictionaries is None or empty.
+                Otherwise returns the JSON string representation.
+        """
+        if list_dictionaries is None or not list_dictionaries:
+            return "[]"
+        return json.dumps(list_dictionaries)

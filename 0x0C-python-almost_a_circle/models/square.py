@@ -17,7 +17,6 @@ class Square(Rectangle):
         y (int): Y-coordinate of the square's position
         id (int): Identifier of the square
     """
-
     def __init__(self, size, x=0, y=0, id=None):
         """
         Initialize a new Square instance.
@@ -73,6 +72,7 @@ class Square(Rectangle):
                 4th argument represents y attribute
             **kwargs: Arbitrary keyword arguments.
                 Each key represents an attribute to the instance
+
         Note:
             **kwargs is skipped if *args exists and is not empty
         """
@@ -84,3 +84,21 @@ class Square(Rectangle):
         else:
             for key, value in kwargs.items():
                 setattr(self, key, value)
+
+    def to_dictionary(self):
+        """
+        Return the dictionary representation of a Square.
+
+        Returns:
+            dict: Dictionary containing the Square's attributes:
+                - id: identifier of the square
+                - size: size of the square
+                - x: x-coordinate of the square
+                - y: y-coordinate of the square
+        """
+        return {
+            'id': self.id,
+            'size': self.size,
+            'x': self.x,
+            'y': self.y
+        }
