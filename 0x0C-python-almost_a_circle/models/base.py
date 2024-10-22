@@ -4,6 +4,7 @@ This module contains the Base class which serves as the foundation for all other
 It manages the id attribute to avoid code duplication and maintain consistency across derived classes.
 """
 import json
+import os
 
 class Base:
     """
@@ -111,3 +112,33 @@ class Base:
         
         dummy.update(**dictionary)  # Update dummy instance with real values
         return dummy
+
+    @classmethod
+    def load_from_file(cls):
+        """
+        Create a list of instances from a JSON file.
+        
+        Returns:
+            list: A list of instances. The type of these instances depends on cls.
+                Returns an empty list if the file doesn't exist.
+                Otherwise returns a list of instances.
+                
+        Notes:
+            - The filename will be <Class name>.json (e.g., Rectangle.json)
+            - Uses from_json_string and create methods
+        """
+        filename = cls.__name__ + ".json"
+        
+        # Return empty list if file doesn't exist
+        if not os.path.exists(filename):
+            return []
+        
+        # Read and parse the JSON file
+        with open(filename, 'r', encoding='utf-8') as f:
+            json_string = f.read()
+        
+        # Convert JSON string to list of dictionaries
+        list_dicts = cls.from_json_string(json_string)
+        
+        # Create instances from dictionaries
+        return [cls.create(**d) for d in list_dicts]
